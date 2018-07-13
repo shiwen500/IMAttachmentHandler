@@ -1,16 +1,23 @@
 package com.seven.www.imattachmenthandler
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.ResultReceiver
 import android.util.Log
+import android.util.Property
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import kotlinx.android.synthetic.main.input_pad.*
 
 class InputStateMachine(
         val imm: InputMethodManager,
@@ -18,10 +25,11 @@ class InputStateMachine(
         val window: Window,
         val etInput: EditText,
         val attachment: View,
-        val inputPad: View
+        val switchBtn: Button,
+        val imView: IMView
 ) {
 
-    private val handler = Handler()
+    val handler = Handler()
 
     inner class InputCloseState : InputState {
 
@@ -36,55 +44,46 @@ class InputStateMachine(
     inner class OnlyOpenIMState : InputState {
 
         override fun enter() {
+
+            if (state is OnlyOpenIMState) {
+                return
+            }
+
+            switchBtn.setText(R.string.btn_input_show_button_list)
+
             // close attachment
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-            handler.postDelayed({
-                imm.showSoftInput(etInput, InputMethodManager.SHOW_FORCED, object : ResultReceiver(handler) {
-                    override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-                        if (resultCode == InputMethodManager.RESULT_SHOWN) {
+            imView.fixedHeightWithoutAttachment()
+            attachment.visibility = View.GONE
 
-                        }
-                        attachment.visibility = View.GONE
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                    }
-                })
-            }, 50)
+            imm.showSoftInput(etInput, InputMethodManager.SHOW_FORCED)
+            handler.postDelayed({
+                imView.restoreHeight()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            }, 100)
         }
     }
 
     inner class OnlyOpenAttachmentState: InputState {
 
         override fun enter() {
+
+            if (state is OnlyOpenAttachmentState) {
+                return
+            }
+
+            switchBtn.setText(R.string.btn_input_show_im)
             // close im
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+            imView.fixedHeight()
 
-            var draw = false
+            imm.hideSoftInputFromWindow(etInput.applicationWindowToken, 0)
 
             handler.postDelayed({
-
-                attachment.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        if (!draw) {
-                            return false
-                        } else {
-                            attachment.viewTreeObserver.removeOnPreDrawListener(this)
-                            return true
-                        }
-                    }
-                })
-
                 attachment.visibility = View.VISIBLE
-
-                imm.hideSoftInputFromWindow(etInput.applicationWindowToken, 0, object : ResultReceiver(handler) {
-                    override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-                        if (resultCode == InputMethodManager.RESULT_HIDDEN) {
-
-                        }
-                        draw = true
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                    }
-                })
-            }, 50)
+                imView.restoreHeight()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            }, 100)
         }
     }
 
@@ -93,15 +92,5 @@ class InputStateMachine(
     fun enter(state: InputState) {
         state.enter()
         this.state = state
-    }
-
-    fun hideSoftInputFromWindow(windowToken: IBinder, flags: Int, listener: InputMethodHelper.IMChangeListener) {
-        imHelper.imChangeListener = listener
-        imm.hideSoftInputFromWindow(windowToken, flags)
-    }
-
-    fun showSoftInput(view: View, flags: Int, listener: InputMethodHelper.IMChangeListener) {
-        imHelper.imChangeListener = listener
-        imm.showSoftInput(view, flags)
     }
 }

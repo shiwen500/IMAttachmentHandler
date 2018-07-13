@@ -15,7 +15,6 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
@@ -27,18 +26,18 @@
         <Button
             android:id="@+id/btn_switch"
             android:text="@string/btn_input_show_button_list"
-            android:layout_width="100dp"
-            android:textSize="15sp"
+            android:layout_width="150dp"
+            android:textSize="12sp"
             android:gravity="center"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/btn_list_container"
+    <FrameLayout
+        android:id="@+id/attachment_container"
         android:layout_width="match_parent"
         android:text="@string/button_list_container"
         android:visibility="gone"
         android:gravity="center"
         android:background="@color/colorAccent"
-        android:layout_height="300dp"/>
+        android:layout_height="250dp"/>
 </LinearLayout>

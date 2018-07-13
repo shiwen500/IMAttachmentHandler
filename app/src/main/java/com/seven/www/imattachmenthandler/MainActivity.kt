@@ -6,25 +6,25 @@ import android.os.Bundle
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val TAG_INPUT_PAD = "tag_input_pad"
+        private const val TAG_INPUT_PAD = "tag_im"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showInputPad()
+        showIM()
     }
 
-    private fun showInputPad() {
-        var inputPad = fragmentManager.findFragmentByTag(TAG_INPUT_PAD) as InputPad?
-        if (inputPad == null) {
-            inputPad = InputPad.newInstance()
+    private fun showIM() {
+        var imFragment = fragmentManager.findFragmentByTag(TAG_INPUT_PAD) as IMFragment?
+        if (imFragment == null) {
+            imFragment = IMFragment.newInstance()
             fragmentManager.beginTransaction()
-                    .add(R.id.im_container, inputPad, TAG_INPUT_PAD)
+                    .add(R.id.main, imFragment, TAG_INPUT_PAD)
                     .commit()
             return
         }
-        fragmentManager.beginTransaction().show(inputPad).commit()
+        fragmentManager.beginTransaction().show(imFragment).commit()
     }
 }
