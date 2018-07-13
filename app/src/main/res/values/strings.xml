@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">IMAttachmentHandler</string>
+    <string name="btn_input_show_im">Show IM</string>
+    <string name="btn_input_show_button_list">Show Buttons</string>
+    <string name="button_list_container">Button List</string>
+</resources>

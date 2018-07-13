@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2017, TP-LINK TECHNOLOGIES CO., LTD.
+
+     input_pad.xml
+
+     Description : xml的描述
+
+     Author ChenShiWen, Created at ${DATE}
+
+     Ver 1.0, ${DATE}, ChenShiWen, Create file
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_input"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btn_switch"
+            android:text="@string/btn_input_show_button_list"
+            android:layout_width="100dp"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btn_list_container"
+        android:layout_width="match_parent"
+        android:text="@string/button_list_container"
+        android:visibility="gone"
+        android:gravity="center"
+        android:background="@color/colorAccent"
+        android:layout_height="300dp"/>
+</LinearLayout>
