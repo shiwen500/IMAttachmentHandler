@@ -3,4 +3,5 @@
     <string name="btn_input_show_im">Show IM</string>
     <string name="btn_input_show_button_list">Show Buttons</string>
     <string name="button_list_container">Button List</string>
+    <string name="btn_record">按住说话</string>
 </resources>
